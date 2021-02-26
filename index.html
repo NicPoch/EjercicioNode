@@ -16,7 +16,7 @@
             <h1>Ejercicio Node</h1>
         </div>
         <div class="row">
-            <h2 class="text-center">Proveedores</h2>
+            <h2 class="text-center">{{who}}</h2>
             <table class="table .table-striped">
                 <thead>
                     <th>
@@ -30,38 +30,23 @@
                     </th>
                 </thead>
                 <tbody>
-                    {{#each proveedores}}
-                    <tr>
+                    {{#if proveedor}}                    
+                    {{#each info}}
+                    <tr>                        
                         <td>{{this.idproveedor}}</td>
                         <td>{{this.nombrecompania}}</td>
                         <td>{{this.nombrecontacto}}</td>
                     </tr>
                     {{/each}}
-                </tbody>
-            </table>
-        </div>
-        <div class="row">
-            <h2 class="text-center">Clientes</h2>
-            <table class="table .table-striped">
-                <thead>
-                    <th>
-                        ID
-                    </th>
-                    <th>
-                        Compañía
-                    </th>
-                    <th>
-                        Contacto
-                    </th>
-                </thead>
-                <tbody>
-                    {{#each clientes}}
+                    {{else}}
+                    {{#each info}}
                     <tr>
                         <td>{{this.idCliente}}</td>
                         <td>{{this.NombreCompania}}</td>
                         <td>{{this.NombreContacto}}</td>
                     </tr>
                     {{/each}}
+                    {{/if}}
                 </tbody>
             </table>
         </div>

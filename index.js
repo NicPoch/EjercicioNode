@@ -20,8 +20,9 @@ const saveAndStore =(info,name)=>{return new Promise((resolve,reject)=>{
 
 const getInfo =(url,name)=>{return new Promise((resolve,reject)=>{axios.get(url).then((info)=>saveAndStore(info.data,name)).then(resolve).catch((err)=>{reject(err)});});};
 
-const compileAndSend=(info,res)=>{
-    var content ={clientes:info[0],proveedores:info[1]};
+const compileAndSend=(info,res,who)=>{
+    console.log(who=="proveedores");
+    var content ={who:who,info:info,proveedor:who=="proveedores"};
     fs.readFile('index.html','utf-8',(err,data)=>{
         let base = data;
         let template= Handlebars.compile(base);
@@ -31,5 +32,17 @@ const compileAndSend=(info,res)=>{
 
 
 http.createServer((req,res)=>{
-    Promise.all([getInfo(url_clientes,"clientes"),getInfo(url_proveedores,"proveedores")]).then((info)=>compileAndSend(info,res)).catch((err)=>{res.end(err)});
+    var url =req.url;
+    if(url=="/proveedores")
+    {
+        getInfo(url_proveedores,"proveedores").then((info)=>compileAndSend(info,res,"proveedores")).catch((err)=>{res.end(err)});
+    }
+    else if(url=="/clientes")
+    {
+        getInfo(url_clientes,"clientes").then((info)=>compileAndSend(info,res,"clientes")).catch((err)=>{res.end(err)});
+    }
+    else
+    {
+        res.end("<h1>Error 404</h1>")
+    }
 }).listen(8081);
