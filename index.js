@@ -1,12 +1,22 @@
+/**
+ * Modulos requeridos
+ */
 const http = require("http");
 const axios= require('axios');
 const fs = require("fs");
 const Handlebars = require("handlebars");
 
-
+/**
+ * las urls
+ */
 const url_proveedores="https://gist.githubusercontent.com/josejbocanegra/d3b26f97573a823a9d0df4ec68fef45f/raw/66440575649e007a9770bcd480badcbbc6a41ba7/proveedores.json";
 const url_clientes = 'https://gist.githubusercontent.com/josejbocanegra/986182ce2dd3e6246adcf960f9cda061/raw/f013c156f37c34117c0d4ba9779b15d427fb8dcd/clientes.json';
 
+/**
+ * 
+ * @param {*} info información que se va a guardar
+ * @param {*} name nombre del archivo
+ */
 const saveAndStore =(info,name)=>{return new Promise((resolve,reject)=>{
     var content=JSON.stringify(info);
     fs.writeFile(name+".json",content,"utf-8",(err)=>{
@@ -18,8 +28,19 @@ const saveAndStore =(info,name)=>{return new Promise((resolve,reject)=>{
     });
 })};
 
+/**
+ * 
+ * @param {*} url url para aduirir información
+ * @param {*} name como se guarda el json
+ */
 const getInfo =(url,name)=>{return new Promise((resolve,reject)=>{axios.get(url).then((info)=>saveAndStore(info.data,name)).then(resolve).catch((err)=>{reject(err)});});};
 
+/**
+ * 
+ * @param {*} info la información a cargar en el template
+ * @param {*} res el response del servidor 
+ * @param {*} who proveedores o clientes
+ */
 const compileAndSend=(info,res,who)=>{
     console.log(who=="proveedores");
     var content ={who:who,info:info,proveedor:who=="proveedores"};
@@ -43,6 +64,6 @@ http.createServer((req,res)=>{
     }
     else
     {
-        res.end("<h1>Error 404</h1>")
+        res.end("<h1>Error 404</h1>");
     }
 }).listen(8081);
